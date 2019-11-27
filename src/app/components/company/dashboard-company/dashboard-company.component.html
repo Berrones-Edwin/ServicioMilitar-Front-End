@@ -1,5 +1,7 @@
+<!-- <app-details-company></app-details-company> -->
+
   <!-- Page Wrapper -->
-<div id="wrapper">
+  <div id="wrapper">
     <app-sidebar></app-sidebar>
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -11,7 +13,8 @@
         <div class="container-fluid">
   
           <!-- Page Heading -->
-          <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+          <button class="btn btn-primary" routerLink="/companies/details/1"> Detalles</button>
+          <app-list-companies></app-list-companies>
           <router-outlet></router-outlet>
   
         </div>
