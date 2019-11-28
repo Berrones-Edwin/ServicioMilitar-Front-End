@@ -8,6 +8,7 @@ import { DetailsCompanyComponent } from './details-company/details-company.compo
 import { FormCompanyComponent } from './form-company/form-company.component';
 import { SharedModule } from '../shared/shared.module';
 import { ListCompaniesComponent } from './list-companies/list-companies.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -21,7 +22,9 @@ import { ListCompaniesComponent } from './list-companies/list-companies.componen
   imports: [
     CommonModule,
     CompanyRoutingModule,
-    SharedModule
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class CompanyModule { }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormControlName, AbstractControl } from "@angular/forms";
 
 @Component({
   selector: 'app-form-company',
@@ -7,9 +8,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormCompanyComponent implements OnInit {
 
-  constructor() { }
+  forma: FormGroup;
+  number:AbstractControl;
+  mainActivity:AbstractControl;
+  constructor() {
+    this.forma = new FormGroup({
+      'number': new FormControl('', [
+        Validators.required,
+        Validators.minLength(3)
+      ]),
+      'mainActivity': new FormControl('', [
+        Validators.required,
+        Validators.minLength(3)
+      ])
+    });
+    this.number = this.forma.controls['number']
+    this.mainActivity = this.forma.controls['mainActivity'];
+  }
 
   ngOnInit() {
+  }
+
+  GuardarCambios(){
+    console.log(this.forma.value);
+    
   }
 
 }

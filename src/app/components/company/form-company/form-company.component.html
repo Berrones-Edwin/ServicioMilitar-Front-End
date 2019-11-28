@@ -1,1 +1,27 @@
-<p>form-company works!</p>
+<form [formGroup]="forma" (submit)="GuardarCambios()">
+    
+    <div class="form-group">
+
+        <label for="">Numero</label>
+        <input type="text" autocomplete="off" name="number" class="form-control" formControlName="number"
+        [class.is-invalid]="!number.valid && number.touched">
+
+        <div class="invalid-feedback"
+            *ngIf="number.errors?.required && number.touched">
+            Este campo es obligatorio.
+        </div>
+        <div class="invalid-feedback"
+            *ngIf="number.errors?.minlength && number.touched">
+            Minímo {{ number.errors?.minlength.requiredLength }} caracteres.
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label for="">Actividad Principal</label>
+        <input type="text" autocomplete="off" name="mainActivity"  class="form-control" formControlName="mainActivity">
+    </div>
+    <div class="form-group">
+        <input  type="reset" class="btn btn-secondary" value="Cancelar">
+        <button class=" float-right btn btn-info" [disabled]="!forma.valid">Guardar</button>
+    </div>
+</form>
