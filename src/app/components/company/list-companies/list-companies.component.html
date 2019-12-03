@@ -1,24 +1,49 @@
-<table class="table" *ngIf="companies">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Number</th>
-            <th>Main Activity</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let c of companies">
-            <td>{{ c.id }}</td>
-            <td><a [routerLink]="['/companies','details', c.id]">{{ c.number }}</a></td>
-            <td>{{ c.mainActivity }}</td>
-            <td>
-                <button class="btn btn-sm btn-warning btn-circle mr-2">
-                    <i class="far fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-danger btn-circle">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="alert alert-info" role="alert" *ngIf="loading; else noLoading">
+    Cargando Datos. Por favor espere.
+</div>
+<ng-template #noLoading>
+    <button class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
+        Nuevo
+    </button>
+    <table class="table" *ngIf="companies && !loading">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Number</th>
+                <th>Main Activity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of companies">
+                <td>{{ c.id }}</td>
+                <td><a [routerLink]="['/companies','details', c.id]">{{ c.number }}</a></td>
+                <td>{{ c.mainActivity }}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning btn-circle mr-2">
+                        <i class="far fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger btn-circle">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" #modal>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nueva Compañia</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <app-form-company (respuesta)="saveNewCompany($event)"></app-form-company>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

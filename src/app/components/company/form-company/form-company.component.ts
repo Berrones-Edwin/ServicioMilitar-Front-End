@@ -1,21 +1,27 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormControlName, AbstractControl } from "@angular/forms";
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
+
+// Services
 import { CompanyService } from 'src/app/services/company.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+// Interfaces
+import { newCompany } from 'src/app/interfaces/newCompany.interface';
 
 @Component({
   selector: 'app-form-company',
   templateUrl: './form-company.component.html',
   styleUrls: ['./form-company.component.css']
 })
-export class FormCompanyComponent implements OnInit,OnDestroy {
- 
+export class FormCompanyComponent implements OnInit {
+
 
   forma: FormGroup;
   number: AbstractControl;
   mainActivity: AbstractControl;
-  private unsubscribe$ = new Subject<void>();
+  @Output() respuesta = new EventEmitter<newCompany>();
+  newCompany: newCompany = {
+    number: '',
+    mainActivity: ''
+  }
 
   constructor(
     private _companyService: CompanyService
@@ -38,32 +44,11 @@ export class FormCompanyComponent implements OnInit,OnDestroy {
   }
 
   GuardarCambios() {
-    console.log(this.forma.value);
-    this.saveCompany().then((data) => {
-
-    }).catch((err) => {
-
-    })
-
+    this.newCompany = this.forma.value;
+    this.respuesta.emit(this.newCompany);
 
   }
 
-  saveCompany() {
-    return new Promise((resolve, reject) => {
-      this._companyService.saveCompany(this.forma.value)
-        .pipe(
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((data) => {
-          if (data) resolve(data)
-          else reject()
-        }, err => reject(err))
-    })
-  }
 
-  ngOnDestroy(): void {
-   this.unsubscribe$.next();
-   this.unsubscribe$.complete();
-  }
 
 }
