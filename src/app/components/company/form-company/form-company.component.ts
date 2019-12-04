@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit,Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
 
 // Services
 import { CompanyService } from 'src/app/services/company.service';
+import { newCompanySaved } from 'src/app/interfaces/newCompanySaved.interface';
+import { Company } from 'src/app/interfaces/company.interface';
 // Interfaces
-import { newCompany } from 'src/app/interfaces/newCompany.interface';
+
 
 @Component({
   selector: 'app-form-company',
@@ -13,12 +15,13 @@ import { newCompany } from 'src/app/interfaces/newCompany.interface';
 })
 export class FormCompanyComponent implements OnInit {
 
+  @Output() respuesta = new EventEmitter<newCompanySaved>();
+  @Input() company:Company 
 
   forma: FormGroup;
   number: AbstractControl;
   mainActivity: AbstractControl;
-  @Output() respuesta = new EventEmitter<newCompany>();
-  newCompany: newCompany = {
+  newCompany: newCompanySaved = {
     number: '',
     mainActivity: ''
   }
@@ -26,6 +29,8 @@ export class FormCompanyComponent implements OnInit {
   constructor(
     private _companyService: CompanyService
   ) {
+    console.log(this.company)
+    
     this.forma = new FormGroup({
       'number': new FormControl('', [
         Validators.required,

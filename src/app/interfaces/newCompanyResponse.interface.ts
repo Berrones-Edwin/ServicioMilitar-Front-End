@@ -5,8 +5,8 @@ export interface NewCompanyResponse {
     "data": {
         "number": string,
         "mainActivity": string,
-        "updated_at": string,
-        "created_at": string,
+        "updated_at": Date,
+        "created_at": Date,
         "id": number
     }
 }

@@ -42,7 +42,7 @@ export class CompanyService {
     return this._http.put(`${environment.url}company/${id}`, company, { headers: header });
   }
 
-  deleteCompany(id: string) {
+  deleteCompany(id: number) {
     const header: HttpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
     });

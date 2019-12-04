@@ -19,10 +19,10 @@
                 <td><a [routerLink]="['/companies','details', c.id]">{{ c.number }}</a></td>
                 <td>{{ c.mainActivity }}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning btn-circle mr-2">
+                    <button (click)="editCompany(c)" class="btn btn-sm btn-warning btn-circle mr-2">
                         <i class="far fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger btn-circle">
+                    <button (click)="deleteCompany(c.id)" class="btn btn-sm btn-danger btn-circle">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -36,7 +36,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Nueva Compañia</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" #closeButton class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

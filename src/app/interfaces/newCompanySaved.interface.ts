@@ -1,4 +1,4 @@
-export interface newCompany {
+export interface newCompanySaved {
     "number": string;
     "mainActivity": string;
 }

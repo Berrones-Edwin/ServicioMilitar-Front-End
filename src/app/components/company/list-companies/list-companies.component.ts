@@ -1,11 +1,17 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CompanyService } from 'src/app/services/company.service';
 import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import Swal from 'sweetalert2';
 
-import { newCompany } from 'src/app/interfaces/newCompany.interface';
+import { HelpersService } from 'src/app/services/helpers.service';
+
+// Interfaces
+import { Company } from 'src/app/interfaces/company.interface';
 import { NewCompanyResponse } from 'src/app/interfaces/newCompanyResponse.interface';
+import { newCompanySaved } from 'src/app/interfaces/newCompanySaved.interface';
+import { DeleteCompanyResponse } from 'src/app/interfaces/deleteCompanyResponse.interface';
+
+// import * as $ from 'jquery';
 
 @Component({
   selector: 'app-list-companies',
@@ -18,53 +24,63 @@ export class ListCompaniesComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   companies: any[] = [];
   loading: boolean = true;
-  @ViewChild('modal', { static: false }) modal;
+  @ViewChild('closeButton', { static: false }) closeButton: ElementRef;
 
   constructor(
-    private _companyService: CompanyService
+    private _companyService: CompanyService,
+    private _helpersService: HelpersService
   ) { }
 
   ngOnInit() {
-    this.getAllCompanies().then((data: any[]) => {
-      if (data) this.loading = false;
+    this.showAllCompanies();
+  }
+
+  private showAllCompanies() {
+    this._getAllCompanies().then((data: any[]) => {
+      if (data)
+        this.loading = false;
       this.companies = data['data'];
     }).catch((err) => console.log(err));
   }
-  saveNewCompany(event: newCompany) {
+
+  saveNewCompany(event: newCompanySaved) {
     console.log(event);
-    this.saveCompany(event).then((data: NewCompanyResponse) => {
-      if (!data.success) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Incorrecto',
-          text: 'No se pudo agregar.Intentalo más tarde',
-        })
-        return;
-      }
-      Swal.fire({
-        icon: 'success',
-        title: 'Correcto',
-        text: 'Se agrego correctamente.',
+    this._saveCompany(event).then((data: NewCompanyResponse) => {
 
-      }).then(() => {
-        this.getAllCompanies().then((data: any[]) => {
-          if (data) this.loading = false;
-          this.companies = data['data'];
-          // this.modal.nativeElement.
-        }).catch((err) => console.log(err));
-      })
+      this._helpersService.showAlertResponse(data.success)
+        .then(() => this.showAllCompanies())
+        .then(() => this.closeButton.nativeElement.click())
+
     }).catch((err) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Incorrecto',
-        text: 'No se pudo agregar.Intentalo más tarde',
-
-      })
+      this._helpersService
+        .createAlert('error', 'Upps!!', 'Algo salio mal. Intentalo más tarde.')
     })
 
   }
 
-  getAllCompanies() {
+  deleteCompany(id: number) {
+    console.log(id);
+    this._deleteCompany(id).then((data: DeleteCompanyResponse) => {
+
+      this._helpersService.showAlertResponse(data.success)
+        .then(() => this.showAllCompanies())
+
+    }).catch(() => {
+
+      this._helpersService
+        .createAlert('error', 'Upps!!', 'Algo salio mal. Intentalo más tarde.')
+    })
+
+  }
+
+  editCompany(c: Company) {
+  }
+
+  //----------------------------------------------
+  //------------SERVICIOS-------------------------
+  //----------------------------------------------
+
+  _getAllCompanies() {
     return new Promise((resolve, reject) => {
       this._companyService.getAllCompanies()
         .pipe(
@@ -79,9 +95,21 @@ export class ListCompaniesComponent implements OnInit, OnDestroy {
         }, err => reject(err))
     })
   }
-  saveCompany(newcompany: newCompany) {
+  _saveCompany(newcompany: newCompanySaved) {
     return new Promise((resolve, reject) => {
       this._companyService.saveCompany(newcompany)
+        .pipe(
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe((data) => {
+          if (data) resolve(data)
+          else reject()
+        }, err => reject(err))
+    })
+  }
+  _deleteCompany(id: number) {
+    return new Promise((resolve, reject) => {
+      this._companyService.deleteCompany(id)
         .pipe(
           takeUntil(this.unsubscribe$)
         )
